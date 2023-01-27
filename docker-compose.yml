@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  shardeum-test-container:
+    security_opt:
+      - "label=disable"
+    image: shardeum-test-image
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - USERNAME=user
+        - USER_UID=1000
+        - USER_GID=1000
+    secrets:
+      - source: git-creds
+        uid: '1000'
+        gid: '1000'
+        mode: 444
+    container_name: shardeum-test-container
+    # network_mode: 'host'
+    # volumes:
+    # - './config.json:/usr/src/app/config.json'
+    # - './data/logs:/usr/src/app/logs'
+    # - './data/db:/usr/src/app/db'
+    # restart: 'always'
+    ports:
+      - '9001:9001'
+      - '10001:10001'
+      - '8080:8080'
+      - '3000:3000'
+    env_file: .env
+
+secrets:
+  git-creds:
+    file: .secrets
